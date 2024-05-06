@@ -26,9 +26,9 @@ function renderError(message) {
         div class="alert alert-danger error-container">${message}</div>
     ';
 }
-function getMemes(searchExpression) {
+function getMemes(searchExpression, memecount) {
     fetch(
-        '${API_PREFIX}${API_KEY}u&q=${searchExpression}&limit=25${API_SETTINGS}'
+        '${API_PREFIX}${API_KEY}u&q=${searchExpression}&limit=${memeCount}${API_SETTINGS}'
     )
         .then(data => data.json())
         .then(renderGifs);
@@ -38,7 +38,8 @@ function getMemes(searchExpression) {
 function formSubmitted(event) {
     event.preventDefault();
     let inputFieldContent = document.querySelector("[name=meme-input]").value;
-    getMemes(inputFieldContent);
+    let memecount = document.querySelector("[name=meme-count]").value;
+    getMemes(inputFieldContent, memecount);
     
 }
 
