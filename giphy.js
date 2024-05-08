@@ -13,7 +13,7 @@ function renderGifs(response) {
                 <img 
                     src="${meme.images.original.url" 
                     alt="${meme.alt_text}" 
-                    class="meme-img"/>
+                    class="meme-img">
             ';
         }
 
