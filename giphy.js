@@ -2,6 +2,11 @@ const API_KEY = "uA36R7Po1mE3xuOSsrCXIlmsI9PKtIIu";
 const API_PREFIX = "https://api.giphy.com/v1/gifs/search?api_key=";
 const API_SETTINGS = "&offset=0&rating=g&lang=en&bundle=messaging_non_clips";
 
+function renderPagination(paginationInfo) {
+    let {count, offset, total_count: totalCount} = paginationInfo;
+    console.log(count, offset, totalCount);
+}
+
 function renderGifs(response) {
     let result = '';
 
@@ -17,6 +22,10 @@ function renderGifs(response) {
         }
 
         document.querySelector(".js-memes-container").innerHTML = result;
+
+        renderPagination(response.pagination);
+
+        let {count, offset, total_count: totalCount} = response.pagination;
     }
 }
 
