@@ -20,6 +20,14 @@ body {
     margin: 40px;;
 }
 
+.pagination-component {
+    margin: 1.5rem;
+}
+
+.page-label {
+    padding: var(--bs-pagination-padding-y) var(--bs-pagination-padding-x);
+}
+
 .page-footer {
     display: flex;
     justify-content: center;
