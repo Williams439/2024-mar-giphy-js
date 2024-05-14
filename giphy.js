@@ -7,21 +7,12 @@ let memesPerPage = 1;
 let currentPage = 1;
 
 function generatePaginationListItems(pageCount) {
-
     let startClass = '';
     let endClass = '';
     let previousClass = '';
     let nextClass = '';
 
-    if (pageCount === 1) {
-        startClass = 'disabled';
-        endClass = 'disabled';
-        previousClass = 'disabled';
-        nextClass = 'disabled';
-
-    }
-
-    if (currentPAge === 1) {
+    if (currentPage === 1) {
         previousClass = 'disabled';
         startClass = 'disabled';
     }
@@ -31,20 +22,51 @@ function generatePaginationListItems(pageCount) {
         nextClass = 'disabled';
     }
 
+    let innerPageLinks = '';
+    if (currentPage === 1) { 
+        innerPageLinks = `
+            <li class="page-item disabled">
+                <a class="page-link" href="#">1</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#">2</a>
+            </li>
+        `;
+    } else if (pageCount === currentPage) {
+        innerPageLinks = `
+            <li class="page-item">
+                <a class="page-link" href="#">${currentPage - 1}</a>
+            </li>
+            <li class="page-item disabled">
+                <a class="page-link" href="#">${currentPage}</a>
+            </li>
+        `;
+    } else {
+        innerPageLinks = `
+            <li class="page-item">
+                <a class="page-link" href="#">${currentPage - 1}</a>
+            </li>
+            <li class="page-item disabled">
+                <a class="page-link" href="#">${currentPage}</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#">${currentPage + 1}</a>
+            </li>
+        `;
+    }
+
     return `
-    <li class="page-item" "${startClass}">
+    <li class="page-item ${startClass}">
         <a class="page-link" href="#">Start</a>
     </li>
-    <li class="page-item" "${previousClass}">
+    <li class="page-item ${previousClass}">
         <a class="page-link" href="#">Previous</a>
     </li>
-    <li class="page-item"><a class="page-link" href="#">1</a></li>
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-    <li class="page-item" ${nextClass}">
+    ${innerPageLinks}
+    <li class="page-item ${nextClass}">
         <a class="page-link" href="#">Next</a>
     </li>
-    <li class="page-item" ${endClass}">
+    <li class="page-item ${endClass}">
         <a class="page-link" href="#">End</a>
     </li>
     `;
