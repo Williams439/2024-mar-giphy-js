@@ -2,6 +2,7 @@ body {
     min-width: 400px;
     color: white;
     background-color: black;
+    margin: 0;
 }
 
 .memes-container {
@@ -14,6 +15,7 @@ body {
     height: 200px;
     margin: 25px;
     border-radius: 25px;
+    max-width: 90%;
 }
 
 .error-container {
@@ -22,10 +24,12 @@ body {
 
 .pagination-component {
     margin: 1.5rem;
+    display: flex;
+    align-items: baseline;
 }
 
 .page-label {
-    padding: var(--bs-pagination-padding-y) var(--bs-pagination-padding-x);
+    padding: 1rem;
 }
 
 .page-footer {

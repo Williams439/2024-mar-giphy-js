@@ -1,10 +1,11 @@
 const API_KEY = "uA36R7Po1mE3xuOSsrCXIlmsI9PKtIIu";
 const API_PREFIX = "https://api.giphy.com/v1/gifs/search?api_key=";
-const API_SETTINGS = "&offset=0&rating=g&lang=en&bundle=messaging_non_clips";
+const API_SETTINGS = "&rating=g&lang=en&bundle=messaging_non_clips";
 
 /* Application interal State */
 let memesPerPage = 1;
 let currentPage = 1;
+let query = '';
 
 function generatePaginationListItems(pageCount) {
     let startClass = '';
@@ -26,48 +27,73 @@ function generatePaginationListItems(pageCount) {
     if (currentPage === 1) { 
         innerPageLinks = `
             <li class="page-item disabled">
-                <a class="page-link" href="#">1</a>
+                <a class="page-link" href="#" data-page="1">1</a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="#">2</a>
+                <a class="page-link" href="#" data-page="2">2</a>
             </li>
         `;
     } else if (pageCount === currentPage) {
         innerPageLinks = `
             <li class="page-item">
-                <a class="page-link" href="#">${currentPage - 1}</a>
+                <a class="page-link" href="#" data-page="${currentPage - 1}">
+                    ${currentPage - 1}
+                </a>
             </li>
             <li class="page-item disabled">
-                <a class="page-link" href="#">${currentPage}</a>
+                <a class="page-link" href="#" data-page="${currentPage}">
+                    ${currentPage}
+                </a>
             </li>
         `;
     } else {
         innerPageLinks = `
             <li class="page-item">
-                <a class="page-link" href="#">${currentPage - 1}</a>
+                <a class="page-link" href="#" data-page="${currentPage - 1}">
+                    ${currentPage - 1}
+                </a>
             </li>
             <li class="page-item disabled">
-                <a class="page-link" href="#">${currentPage}</a>
+                <a class="page-link" href="#" data-page="${currentPage}">
+                    ${currentPage}
+                </a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="#">${currentPage + 1}</a>
+                <a class="page-link" href="#" data-page="${currentPage + 1}">
+                    ${currentPage + 1}
+                </a>
             </li>
         `;
     }
 
     return `
     <li class="page-item ${startClass}">
-        <a class="page-link" href="#">Start</a>
+        <a class="page-link" href="#" data-page="1">Start</a>
     </li>
     <li class="page-item ${previousClass}">
-        <a class="page-link" href="#">Previous</a>
+        <a 
+            class="page-link" 
+            href="#"
+            data-page="${currentPage - 1}">
+                Previous
+        </a>
     </li>
     ${innerPageLinks}
     <li class="page-item ${nextClass}">
-        <a class="page-link" href="#">Next</a>
+        <a 
+            class="page-link" 
+            href="#"
+            data-page="${currentPage + 1}">
+                Next
+        </a>
     </li>
     <li class="page-item ${endClass}">
-        <a class="page-link" href="#">End</a>
+        <a 
+            class="page-link" 
+            href="#"
+            data-page="${pageCount}">
+                End
+        </a>
     </li>
     `;
 }
@@ -82,10 +108,10 @@ function renderPagination(paginationInfo) {
     aria-label="Page navigation example" 
     data-bs-theme="dark"
     class="pagination-component">
-  <ul class="pagination">
-    ${generatePaginationListItems(pageCount)}
-    <li class="page-label">Page ${currentPage} of ${pageCount}</li>
-  </ul>
+    <ul class="pagination">
+        ${generatePaginationListItems(pageCount)}
+    </ul>
+    <span class="page-label">Page ${currentPage} of ${pageCount}</span>
 </nav>`;
 
     document.querySelector(".js-pagination-top").innerHTML = html;
@@ -119,9 +145,10 @@ function renderError(message) {
         `<div class="alert alert-danger error-container">${message}</div>`;
 }
 
-function getMemes(searchExpression) {
+function getMemes() {
+    let offset = (currentPage - 1) * memesPerPage;
     fetch(
-        `${API_PREFIX}${API_KEY}&q=${searchExpression}&limit=${memesPerPage}${API_SETTINGS}`
+        `${API_PREFIX}${API_KEY}&q=${query}&limit=${memesPerPage}&offset=${offset}${API_SETTINGS}`
     )
         .then(data => data.json())
         .then(renderGifs)
@@ -130,13 +157,24 @@ function getMemes(searchExpression) {
 
 function formSubmitted(event) {
     event.preventDefault();
-    let inputFieldContent = document.querySelector("[name=meme-input]").value;
+    query = document.querySelector("[name=meme-input]").value;
 
-
+    /* set the global state */
     memesPerPage = document.querySelector("[name=meme-count]").value;
     currentPage = 1;
 
-    getMemes(inputFieldContent);
+    getMemes();
 }
 
 document.querySelector("#meme-form").addEventListener("submit", formSubmitted);
+
+function paginate(event) {
+    let page = event.target.dataset.page;
+    if (typeof page !== 'undefined') {
+        event.preventDefault();
+        currentPage = Number(page);
+        getMemes();
+    }
+}
+
+document.querySelector('main').addEventListener('click', paginate);
